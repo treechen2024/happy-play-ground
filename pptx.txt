@@ -1,0 +1,77 @@
+在 Python 的 `python-pptx` 庫中，要讓文字框中的文字換行，可以使用換行字元 `\n`。
+
+以下是一個簡單的例子：
+
+```python
+from pptx import Presentation
+from pptx.util import Inches
+
+# 建立簡報
+prs = Presentation()
+# 新增投影片
+slide = prs.slides.add_slide(prs.slide_layouts[5])  # 空白版面
+
+# 新增文字框
+left = top = width = height = Inches(1)
+txBox = slide.shapes.add_textbox(left, top, width, height).text_frame
+
+# 加入含換行的文字
+text = "This is the first line.\nThis is the second line.\nThis is the third line."
+txBox.text = text
+
+# 儲存簡報
+prs.save("newline_example.pptx")
+```
+
+**說明:**
+
+*  `\n` 是換行字元，會在文字框中強制換行。
+*  上面的程式碼建立一個簡報，新增一個空白投影片，然後在投影片上新增一個文字框。
+*  `txBox.text = text` 將包含換行字元的字串 `text` 設定為文字框的內容。
+*  最後儲存簡報為 `newline_example.pptx`。
+
+**處理段落和更精細的格式:**
+
+如果你需要更精細的格式控制，例如段落間距、縮排等，需要使用 `paragraph` 和 `run` 物件。
+
+```python
+from pptx import Presentation
+from pptx.util import Inches
+
+prs = Presentation()
+slide = prs.slides.add_slide(prs.slide_layouts[5])
+
+left = top = width = height = Inches(1)
+txBox = slide.shapes.add_textbox(left, top, width, height).text_frame
+
+# 新增第一個段落
+p = txBox.add_paragraph()
+p.text = "This is the first paragraph."
+
+# 新增第二個段落
+p = txBox.add_paragraph()
+p.text = "This is the second paragraph."
+
+# 在同一段落內使用 run 控制格式
+p = txBox.add_paragraph()
+run = p.add_run()
+run.text = "This is bold text."
+run.bold = True
+run = p.add_run()
+run.text = " and this is regular text."
+
+
+prs.save("paragraphs_and_runs.pptx")
+```
+
+**說明:**
+
+*  `txBox.add_paragraph()` 新增一個段落。
+*  `p.text` 設定段落的文字內容。
+*  `p.add_run()` 在段落內新增一個 run，可以分別設定不同 run 的格式，例如粗體、斜體、字型等。
+
+
+這個例子展示了如何在同一段落內混合不同格式的文字，並利用 `add_paragraph()` 建立不同的段落，實現更豐富的文字排版。
+
+
+希望這些資訊能幫助你!  如果你還有其他問題，請隨時提出。
