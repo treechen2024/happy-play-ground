@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>俄羅斯方塊</title>
     <style>
+        /* 基礎樣式 (保持不變) */
         body {
             display: flex;
             flex-direction: column;
@@ -21,7 +22,7 @@
             flex-direction: row;
             flex-wrap: nowrap;
             overflow-x: auto;
-            gap: 40px; /* 增加間距從20px到40px */
+            gap: 40px;
             margin-top: 20px;
             width: 100%;
             max-width: 1200px;
@@ -64,7 +65,7 @@
             color: white;
             border: none;
             border-radius: 5px;
-            width: 120px; /* 新增：固定按鈕寬度 */
+            width: 120px;
         }
         button:hover {
             background-color: #45a049;
@@ -73,7 +74,7 @@
             margin-top: 20px;
             display: flex;
             flex-direction: column;
-            align-items: center; /* 改回置中對齊 */
+            align-items: center;
             gap: 10px;
             width: 120px;
         }
@@ -81,7 +82,7 @@
             display: flex;
             gap: 10px;
             margin-left: 0;
-            justify-content: center; /* 新增：置中對齊 */
+            justify-content: center;
         }
         .direction-controls button {
             width: 60px;
@@ -90,46 +91,59 @@
             font-size: 24px;
         }
 
+        /* 橫向模式下的樣式調整 */
         @media (max-width: 768px) and (orientation: landscape) {
+            body {
+                padding: 0; /* 減少 body padding */
+            }
             .game-container {
-                gap: 20px;
                 flex-wrap: nowrap;
+                gap: 10px; /* 減少遊戲區塊間的間距 */
+                align-items: center; /* 垂直置中遊戲區塊 */
+                height: 100vh; /* 佔滿螢幕高度 */
+                margin-top: 0; /* 移除頂部 margin */
             }
             #gameCanvas {
-                max-width: 50vh;
+                max-width: 50vh; /* 限制畫布寬度為螢幕高度的 50% */
                 height: auto;
             }
             .game-info {
-                max-width: 25vh;
-                flex-direction: row;
-                flex-wrap: wrap;
+                flex-direction: column; /* 改回 column 排列 */
+                justify-content: space-between; /* 垂直平均分配空間 */
                 align-items: flex-start;
+                max-width: 30vh; /* 限制資訊區塊寬度 */
+                height: 80vh; /* 佔據大部分可視高度 */
+                padding-top: 10px;
             }
             .score-board {
                 width: 100%;
-                margin-bottom: 10px;
-            }
-            .controls {
-                order: 1;
-                margin-right: 20px;
-            }
-            .direction-controls {
-                order: 2;
-                margin-top: 0;
-            }
-            button {
-                width: 100px;
-                font-size: 14px;
-                padding: 8px 16px;
-            }
-            .direction-controls button {
-                width: 40px;
-                height: 40px;
-                font-size: 20px;
+                margin-bottom: 5px; /* 減少分數板底部 margin */
+                font-size: 16px; /* 縮小字體 */
             }
             .next-piece {
-                width: 80px;
-                height: 80px;
+                width: 60px; /* 縮小預覽區塊 */
+                height: 60px;
+                margin-bottom: 5px;
+            }
+            .controls {
+                order: 1; /* 控制按鈕顯示在上方 */
+                margin-right: 0; /* 移除右側 margin */
+                margin-bottom: 5px;
+            }
+            .direction-controls {
+                order: 2; /* 方向控制顯示在下方 */
+                margin-top: 0;
+                margin-bottom: 10px;
+            }
+            button {
+                width: 80px; /* 縮小按鈕寬度 */
+                font-size: 12px; /* 縮小按鈕字體 */
+                padding: 6px 12px; /* 縮小按鈕內距 */
+            }
+            .direction-controls button {
+                width: 30px; /* 縮小方向按鈕 */
+                height: 30px;
+                font-size: 16px;
             }
         }
         .score-board {
