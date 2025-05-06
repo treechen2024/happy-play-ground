@@ -29,6 +29,7 @@ class Tetris {
         this.level = 1;
         this.gameOver = false;
         this.isPaused = false;
+        this.isAccelerating = false;
 
         this.currentPiece = null;
         this.currentColor = null;
@@ -40,12 +41,47 @@ class Tetris {
 
     bindEvents() {
         document.addEventListener('keydown', this.handleKeyPress.bind(this));
+        document.addEventListener('keyup', this.handleKeyUp.bind(this));
         this.startBtn.addEventListener('click', () => {
             this.reset();
             this.start();
             this.startBtn.textContent = '重新開始';
         });
         this.pauseBtn.addEventListener('click', () => this.togglePause());
+
+        // 綁定虛擬方向按鈕事件
+        document.getElementById('leftBtn').addEventListener('click', () => this.moveLeft());
+        document.getElementById('rightBtn').addEventListener('click', () => this.moveRight());
+        
+        // 為向下按鈕添加按住加速功能
+        const downBtn = document.getElementById('downBtn');
+        downBtn.addEventListener('mousedown', () => {
+            this.isAccelerating = true;
+            this.moveDown();
+        });
+        downBtn.addEventListener('mouseup', () => {
+            this.isAccelerating = false;
+        });
+        downBtn.addEventListener('mouseleave', () => {
+            this.isAccelerating = false;
+        });
+        
+        // 為觸控設備添加觸摸事件
+        downBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            this.isAccelerating = true;
+            this.moveDown();
+        });
+        downBtn.addEventListener('touchend', () => {
+            this.isAccelerating = false;
+        });
+        
+        document.getElementById('rotateBtn').addEventListener('click', () => this.rotatePiece());
+
+        // 防止按鈕觸發時頁面滾動
+        document.querySelectorAll('.direction-controls button').forEach(button => {
+            button.addEventListener('touchstart', (e) => e.preventDefault());
+        });
     }
 
     reset() {
@@ -251,22 +287,36 @@ class Tetris {
 
         switch(event.keyCode) {
             case 37: // 左箭頭
+                event.preventDefault();
                 this.moveLeft();
                 break;
             case 39: // 右箭頭
+                event.preventDefault();
                 this.moveRight();
                 break;
             case 40: // 下箭頭
+                event.preventDefault();
+                if (!this.isAccelerating) {
+                    this.isAccelerating = true;
+                }
                 this.moveDown();
                 break;
             case 38: // 上箭頭
+                event.preventDefault();
                 this.rotatePiece();
                 break;
             case 32: // 空白鍵
+                event.preventDefault();
                 while(this.moveDown());
                 break;
         }
         this.draw();
+    }
+
+    handleKeyUp(event) {
+        if (event.keyCode === 40) { // 下箭頭
+            this.isAccelerating = false;
+        }
     }
 
     gameLoop() {
@@ -274,7 +324,8 @@ class Tetris {
             this.moveDown();
             this.draw();
         }
-        setTimeout(() => this.gameLoop(), 1000 / this.level);
+        const speed = this.isAccelerating ? this.level * 4 : this.level;
+        setTimeout(() => this.gameLoop(), 1000 / speed);
     }
 }
 
