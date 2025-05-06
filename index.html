@@ -90,33 +90,39 @@
             font-size: 24px;
         }
 
-        @media (max-width: 768px) {
-            #gameCanvas,
+        @media (max-width: 768px) and (orientation: landscape) {
+            .game-container {
+                gap: 20px;
+                flex-wrap: nowrap;
+            }
+            #gameCanvas {
+                max-width: 50vh;
+                height: auto;
+            }
             .game-info {
-                flex-shrink: 0;
-                width: 300px;
+                max-width: 25vh;
             }
             button {
-                padding: 8px 16px;
+                width: 100px;
                 font-size: 14px;
-                width: 100px; /* 手機上更小的按鈕寬度 */
-            }
-            .next-piece {
-                width: 80px;
-                height: 80px;
+                padding: 8px 16px;
             }
             .direction-controls button {
                 width: 40px;
                 height: 40px;
                 font-size: 20px;
             }
-            .score-board {
-                font-size: 18px;
+            .next-piece {
+                width: 80px;
+                height: 80px;
             }
-            button {
-                padding: 8px 16px;
-                font-size: 14px;
-            }
+        }
+        .score-board {
+            font-size: 18px;
+        }
+        button {
+            padding: 8px 16px;
+            font-size: 14px;
         }
     </style>
 </head>
