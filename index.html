@@ -94,54 +94,54 @@
         /* 橫向模式下的樣式調整 */
         @media (max-width: 768px) and (orientation: landscape) {
             body {
-                padding: 0; /* 減少 body padding */
+                padding: 0;
             }
             .game-container {
                 flex-wrap: nowrap;
-                gap: 10px; /* 減少遊戲區塊間的間距 */
-                align-items: center; /* 垂直置中遊戲區塊 */
-                height: 100vh; /* 佔滿螢幕高度 */
-                margin-top: 0; /* 移除頂部 margin */
+                gap: 10px;
+                align-items: center;
+                height: 100vh;
+                margin-top: 0;
             }
             #gameCanvas {
-                max-width: 50vh; /* 限制畫布寬度為螢幕高度的 50% */
+                max-width: 50vh;
                 height: auto;
             }
             .game-info {
-                flex-direction: column; /* 改回 column 排列 */
-                justify-content: space-between; /* 垂直平均分配空間 */
+                flex-direction: column;
+                justify-content: space-between;
                 align-items: flex-start;
-                max-width: 30vh; /* 限制資訊區塊寬度 */
-                height: 80vh; /* 佔據大部分可視高度 */
+                max-width: 30vh;
+                height: 80vh;
                 padding-top: 10px;
             }
             .score-board {
                 width: 100%;
-                margin-bottom: 5px; /* 減少分數板底部 margin */
-                font-size: 16px; /* 縮小字體 */
+                margin-bottom: 5px;
+                font-size: 16px;
             }
             .next-piece {
-                width: 60px; /* 縮小預覽區塊 */
+                width: 60px;
                 height: 60px;
                 margin-bottom: 5px;
             }
             .controls {
-                order: 1; /* 控制按鈕顯示在上方 */
-                margin-right: 0; /* 移除右側 margin */
+                order: 2; /* 將一般控制按鈕放在第二個位置 */
+                margin-right: 0;
                 margin-bottom: 5px;
             }
             .direction-controls {
-                order: 2; /* 方向控制顯示在下方 */
+                order: 1; /* 將方向控制按鈕放在第一個位置 */
                 margin-top: 0;
                 margin-bottom: 10px;
             }
             button {
-                width: 80px; /* 縮小按鈕寬度 */
-                font-size: 12px; /* 縮小按鈕字體 */
-                padding: 6px 12px; /* 縮小按鈕內距 */
+                width: 80px;
+                font-size: 12px;
+                padding: 6px 12px;
             }
             .direction-controls button {
-                width: 30px; /* 縮小方向按鈕 */
+                width: 30px;
                 height: 30px;
                 font-size: 16px;
             }
@@ -160,6 +160,13 @@
     <div class="game-container">
         <canvas id="gameCanvas" width="300" height="600"></canvas>
         <div class="game-info">
+            <div class="direction-controls">  <button id="rotateBtn">旋轉</button>
+                <div class="direction-row">
+                    <button id="leftBtn">←</button>
+                    <button id="downBtn">↓</button>
+                    <button id="rightBtn">→</button>
+                </div>
+            </div>
             <div class="score-board">
                 <p>分數: <span id="score">0</span></p>
                 <p>等級: <span id="level">1</span></p>
@@ -168,17 +175,8 @@
                 <p>下一個方塊:</p>
                 <canvas id="nextPiece" class="next-piece"></canvas>
             </div>
-            <div class="controls">
-                <button id="startBtn">開始遊戲</button>
+            <div class="controls">  <button id="startBtn">開始遊戲</button>
                 <button id="pauseBtn">暫停</button>
-            </div>
-            <div class="direction-controls">
-                <button id="rotateBtn">旋轉</button>
-                <div class="direction-row">
-                    <button id="leftBtn">←</button>
-                    <button id="downBtn">↓</button>
-                    <button id="rightBtn">→</button>
-                </div>
             </div>
         </div>
     </div>
