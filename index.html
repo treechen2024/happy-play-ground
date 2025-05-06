@@ -19,9 +19,9 @@
         .game-container {
             display: flex;
             flex-direction: row;
-            flex-wrap: nowrap; /* ❗ 防止換行 */
-            overflow-x: auto;   /* ❗ 允許橫向滑動 */
-            gap: 20px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 40px; /* 增加間距從20px到40px */
             margin-top: 20px;
             width: 100%;
             max-width: 1200px;
@@ -64,6 +64,7 @@
             color: white;
             border: none;
             border-radius: 5px;
+            width: 120px; /* 新增：固定按鈕寬度 */
         }
         button:hover {
             background-color: #45a049;
@@ -72,12 +73,15 @@
             margin-top: 20px;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: center; /* 改回置中對齊 */
             gap: 10px;
+            width: 120px;
         }
         .direction-row {
             display: flex;
             gap: 10px;
+            margin-left: 0;
+            justify-content: center; /* 新增：置中對齊 */
         }
         .direction-controls button {
             width: 60px;
@@ -90,7 +94,12 @@
             #gameCanvas,
             .game-info {
                 flex-shrink: 0;
-                width: 300px; /* 固定寬度保持橫向排版 */
+                width: 300px;
+            }
+            button {
+                padding: 8px 16px;
+                font-size: 14px;
+                width: 100px; /* 手機上更小的按鈕寬度 */
             }
             .next-piece {
                 width: 80px;
