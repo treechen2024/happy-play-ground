@@ -49,38 +49,40 @@ class Tetris {
         });
         this.pauseBtn.addEventListener('click', () => this.togglePause());
 
-        // 綁定虛擬方向按鈕事件
-        document.getElementById('leftBtn').addEventListener('click', () => this.moveLeft());
-        document.getElementById('rightBtn').addEventListener('click', () => this.moveRight());
-        
-        // 為向下按鈕添加按住加速功能
-        const downBtn = document.getElementById('downBtn');
-        downBtn.addEventListener('mousedown', () => {
-            this.isAccelerating = true;
-            this.moveDown();
-        });
-        downBtn.addEventListener('mouseup', () => {
-            this.isAccelerating = false;
-        });
-        downBtn.addEventListener('mouseleave', () => {
-            this.isAccelerating = false;
-        });
-        
-        // 為觸控設備添加觸摸事件
-        downBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.isAccelerating = true;
-            this.moveDown();
-        });
-        downBtn.addEventListener('touchend', () => {
-            this.isAccelerating = false;
-        });
-        
-        document.getElementById('rotateBtn').addEventListener('click', () => this.rotatePiece());
+        // 移除方向及旋轉按鍵的事件綁定
 
-        // 防止按鈕觸發時頁面滾動
-        document.querySelectorAll('.direction-controls button').forEach(button => {
-            button.addEventListener('touchstart', (e) => e.preventDefault());
+        // 新增觸控事件
+        this.canvas.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            const rect = this.canvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+
+            if (x < rect.width / 3) {
+                this.moveLeft();
+            } else if (x > (rect.width / 3) * 2) {
+                this.moveRight();
+            } else {
+                this.rotatePiece();
+            }
+            this.draw();
+        });
+
+        this.canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        });
+
+        // 長按加速下落
+        let touchTimer;
+        this.canvas.addEventListener('touchstart', () => {
+            touchTimer = setTimeout(() => {
+                this.isAccelerating = true;
+            }, 300);
+        });
+
+        this.canvas.addEventListener('touchend', () => {
+            clearTimeout(touchTimer);
+            this.isAccelerating = false;
         });
     }
 
