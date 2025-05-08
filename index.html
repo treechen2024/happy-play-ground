@@ -92,8 +92,8 @@
             font-size: 24px;
         }
 
-        /* 橫向模式下的樣式調整 */
-        @media (max-width: 768px) and (orientation: landscape) {
+        /* 移除以下橫向模式樣式 */
+        /* @media (max-width: 768px) and (orientation: landscape) {
             body {
                 padding: 0;
             }
@@ -109,7 +109,7 @@
                 height: auto;
             }
             .game-info {
-                touch-action: manipulation; /* 新增：優化觸控體驗 */
+                touch-action: manipulation;
                 flex-direction: column;
                 justify-content: space-between;
                 align-items: flex-start;
@@ -128,12 +128,12 @@
                 margin-bottom: 5px;
             }
             .controls {
-                order: 2; /* 將一般控制按鈕放在第二個位置 */
+                order: 2;
                 margin-right: 0;
                 margin-bottom: 5px;
             }
             .direction-controls {
-                order: 1; /* 將方向控制按鈕放在第一個位置 */
+                order: 1;
                 margin-top: 0;
                 margin-bottom: 10px;
             }
@@ -147,13 +147,53 @@
                 height: 30px;
                 font-size: 16px;
             }
-        }
+        } */
         .score-board {
             font-size: 18px;
         }
         button {
             padding: 8px 16px;
             font-size: 14px;
+        }
+        
+        /* 縱向模式下的樣式調整 */
+        @media (max-width: 768px) and (orientation: portrait) {
+            body {
+                padding: 5px;
+                justify-content: flex-start;
+            }
+            .game-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+                width: 100%;
+                margin-top: 10px;
+            }
+            #gameCanvas {
+                width: 100%;
+                max-width: 300px;
+                height: auto;
+            }
+            .game-info {
+                width: 100%;
+                max-width: 300px;
+                gap: 15px;
+            }
+            .next-piece {
+                width: 60px;
+                height: 60px;
+            }
+            .controls {
+                flex-direction: row;
+                justify-content: center;
+            }
+            .direction-controls {
+                margin-top: 10px;
+            }
+            button {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -174,14 +214,26 @@
                 <button id="startBtn">開始遊戲</button>
                 <button id="pauseBtn">暫停</button>
             </div>
+            
+            <!-- 添加方向控制按鈕 -->
+            <div class="direction-controls">
+                <div class="direction-row">
+                    <button id="rotateBtn">↻</button>
+                </div>
+                <div class="direction-row">
+                    <button id="leftBtn">←</button>
+                    <button id="downBtn">↓</button>
+                    <button id="rightBtn">→</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // 可選提示：建議橫向操作
-        if (window.innerHeight > window.innerWidth) {
-            alert("建議將裝置轉為橫向，以獲得最佳遊戲體驗！");
-        }
+        // 移除橫向操作提示
+        // if (window.innerHeight > window.innerWidth) {
+        //     alert("建議將裝置轉為橫向，以獲得最佳遊戲體驗！");
+        // }
     </script>
 
     <script src="tetris.js"></script>

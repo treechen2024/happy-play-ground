@@ -49,26 +49,107 @@ class Tetris {
         });
         this.pauseBtn.addEventListener('click', () => this.togglePause());
 
-        // 移除方向及旋轉按鍵的事件綁定
+        // 添加方向控制按鈕事件綁定
+        const leftBtn = document.getElementById('leftBtn');
+        const rightBtn = document.getElementById('rightBtn');
+        const downBtn = document.getElementById('downBtn');
+        const rotateBtn = document.getElementById('rotateBtn');
 
-        // 新增觸控事件
+        if (leftBtn) {
+            leftBtn.addEventListener('click', () => {
+                if (!this.gameOver && !this.isPaused) {
+                    this.moveLeft();
+                    this.draw();
+                    this.vibrate(50);
+                }
+            });
+        }
+
+        if (rightBtn) {
+            rightBtn.addEventListener('click', () => {
+                if (!this.gameOver && !this.isPaused) {
+                    this.moveRight();
+                    this.draw();
+                    this.vibrate(50);
+                }
+            });
+        }
+
+        if (downBtn) {
+            downBtn.addEventListener('touchstart', () => {
+                if (!this.gameOver && !this.isPaused) {
+                    this.isAccelerating = true;
+                    this.vibrate(50);
+                }
+            });
+            downBtn.addEventListener('touchend', () => {
+                this.isAccelerating = false;
+            });
+        }
+
+        if (rotateBtn) {
+            rotateBtn.addEventListener('click', () => {
+                if (!this.gameOver && !this.isPaused) {
+                    this.rotatePiece();
+                    this.draw();
+                    this.vibrate(50);
+                }
+            });
+        }
+
+        // 改進觸控手勢
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchStartTime = 0;
+
         this.canvas.addEventListener('touchstart', (e) => {
-            const touch = e.touches[0];
-            const rect = this.canvas.getBoundingClientRect();
-            const x = touch.clientX - rect.left;
-            const y = touch.clientY - rect.top;
-
-            if (x < rect.width / 3) {
-                this.moveLeft();
-            } else if (x > (rect.width / 3) * 2) {
-                this.moveRight();
-            } else {
-                this.rotatePiece();
-            }
-            this.draw();
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            touchStartTime = Date.now();
+            e.preventDefault();
         });
 
         this.canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        });
+
+        this.canvas.addEventListener('touchend', (e) => {
+            if (this.gameOver || this.isPaused) return;
+
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const touchEndTime = Date.now();
+            
+            const diffX = touchEndX - touchStartX;
+            const diffY = touchEndY - touchStartY;
+            const touchDuration = touchEndTime - touchStartTime;
+            
+            // 快速點擊 (小於 250ms) 且移動距離小
+            if (touchDuration < 250 && Math.abs(diffX) < 20 && Math.abs(diffY) < 20) {
+                // 點擊旋轉
+                this.rotatePiece();
+                this.vibrate(50);
+            } else if (Math.abs(diffX) > Math.abs(diffY)) {
+                // 水平滑動
+                if (diffX > 30) {
+                    // 向右滑動
+                    this.moveRight();
+                    this.vibrate(50);
+                } else if (diffX < -30) {
+                    // 向左滑動
+                    this.moveLeft();
+                    this.vibrate(50);
+                }
+            } else {
+                // 垂直滑動
+                if (diffY > 30) {
+                    // 向下滑動 - 快速下落
+                    while(this.moveDown());
+                    this.vibrate(100);
+                }
+            }
+            
+            this.draw();
             e.preventDefault();
         });
 
@@ -198,6 +279,7 @@ class Tetris {
         }
     }
 
+    // 修改 clearLines 方法添加振動反饋
     clearLines() {
         let linesCleared = 0;
         for (let y = ROWS - 1; y >= 0; y--) {
@@ -212,6 +294,17 @@ class Tetris {
             this.score += linesCleared * 100 * this.level;
             this.level = Math.floor(this.score / 1000) + 1;
             this.updateScore();
+            
+            // 根據消除行數提供不同強度的振動反饋
+            if (linesCleared === 1) {
+                this.vibrate(100);
+            } else if (linesCleared === 2) {
+                this.vibrate([100, 50, 100]);
+            } else if (linesCleared === 3) {
+                this.vibrate([100, 50, 100, 50, 100]);
+            } else if (linesCleared === 4) {
+                this.vibrate([100, 50, 100, 50, 100, 50, 200]);
+            }
         }
     }
 
@@ -284,6 +377,13 @@ class Tetris {
         }
     }
 
+    // 將 vibrate 方法移到類內部
+    vibrate(duration) {
+        if (window.navigator && window.navigator.vibrate) {
+            window.navigator.vibrate(duration);
+        }
+    }
+
     handleKeyPress(event) {
         if (this.gameOver || this.isPaused) return;
 
@@ -334,4 +434,26 @@ class Tetris {
 // 當頁面載入完成後初始化遊戲
 window.addEventListener('load', () => {
     const game = new Tetris();
+    
+    // 移除以下方向變化監聽代碼
+    // window.addEventListener('orientationchange', () => {
+    //     game.draw();
+    //     game.drawNextPiece();
+    // });
+    
+    // 添加全螢幕切換功能
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    if (fullscreenBtn) {
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`全螢幕請求錯誤: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        });
+    }
 });
